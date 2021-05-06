@@ -65,8 +65,10 @@ public class Main {
                 	    CLook.CLook(Requests,headStart);
                         break;
                     }
-                	case 7:
-                		break;
+                	case 7: {
+                	    Optimized.Optimized(Requests,headStart);
+                        break;
+                    }
                 }
                 System.out.println();
                 System.out.println("===========================\n");
