@@ -10,6 +10,7 @@ public class CLook {
 
         int totalHeadMovement=0;
 
+        System.out.println("CLOOK ALGORITHM");
         System.out.println("the sequence of head movement :");
 
         for(int i=0 ;i <Requests.size() ; i++){
@@ -26,7 +27,7 @@ public class CLook {
         for(int i=0 ;i <right.size() ; i++){
             seekTrack= right.get(i);
 
-            System.out.println(seekTrack);
+            System.out.print(seekTrack);
 
             totalHeadMovement += Math.abs(seekTrack - head);
 
@@ -37,7 +38,7 @@ public class CLook {
         for(int i=0 ;i <left.size() ; i++){
             seekTrack= left.get(i);
 
-            System.out.println(seekTrack);
+            System.out.print(seekTrack);
 
             totalHeadMovement += Math.abs(seekTrack - head);
 
@@ -46,7 +47,7 @@ public class CLook {
             head =seekTrack;
         }
 
-        System.out.println("the total head movement : "+totalHeadMovement);
+        System.out.println("\nthe total head movement : "+totalHeadMovement);
 
     }
 

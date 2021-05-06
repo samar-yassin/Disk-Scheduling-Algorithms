@@ -15,6 +15,7 @@ public class CScan {
 
         int totalHeadMovement=0;
 
+        System.out.println("CSCAN ALGORITHM");
         System.out.println("the sequence of head movement :");
 
         for(int i=0 ;i <Requests.size() ; i++){
@@ -31,7 +32,7 @@ public class CScan {
         for(int i=0 ;i <right.size() ; i++){
             seekTrack= right.get(i);
 
-            System.out.println(seekTrack);
+            System.out.print(seekTrack);
 
             totalHeadMovement += Math.abs(seekTrack - head);
 
@@ -44,14 +45,14 @@ public class CScan {
         for(int i=0 ;i <left.size() ; i++){
             seekTrack= left.get(i);
 
-            System.out.println(seekTrack);
+            System.out.print(seekTrack);
 
             totalHeadMovement += Math.abs(seekTrack - head);
 
             head =seekTrack;
         }
 
-        System.out.println("the total head movement : "+totalHeadMovement);
+        System.out.println("\nthe total head movement : "+totalHeadMovement);
 
 
         }
