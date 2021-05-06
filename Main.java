@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     static public void main (String[] arg) {
-        int numberOfRequests;
+        int numberOfRequests, headStart;
 
         ArrayList<Integer> Requests = new ArrayList<Integer>();
 
@@ -23,11 +23,13 @@ public class Main {
             int option = input.nextInt();
 
 
-            if (option < 8) {
-
+            if (option < 8 && option > 0) {
+            	
+                System.out.print("Enter the initial head start: ");
+                headStart = input.nextInt();
                 System.out.print("Enter the number of I/O requests: ");
                 numberOfRequests = input.nextInt();
-
+                
                 System.out.println();
 
 
@@ -41,6 +43,28 @@ public class Main {
                 System.out.println("===========================\n");
 
                 System.out.println();
+                
+                switch(option) {
+                	case 1:
+                		break;
+                	case 2:
+                		break;
+                	case 3: {
+                		Scan s = new Scan(Requests, headStart);
+                		s.schedule();
+                		break;
+                	}
+                	case 4:
+                		break;
+                	case 5:
+                		break;
+                	case 6:
+                		break;
+                	case 7:
+                		break;
+                }
+                System.out.println();
+                System.out.println("===========================\n");
 
             } else if (option == 8) {
 
