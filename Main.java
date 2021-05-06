@@ -6,11 +6,12 @@ public class Main {
     static public void main (String[] arg) {
         int numberOfRequests, headStart;
 
-        ArrayList<Integer> Requests = new ArrayList<Integer>();
 
         Scanner input = new Scanner(System.in);
 
         while(true) {
+            ArrayList<Integer> Requests = new ArrayList<Integer>();
+
             System.out.println("Select the Scheduler you want to use:"
                     + "\n[1] First Come First Served"
                     + "\n[2] Shortest-Seek-Time-First"
@@ -54,12 +55,16 @@ public class Main {
                 		s.schedule();
                 		break;
                 	}
-                	case 4:
-                		break;
+                	case 4: {
+                	    CScan.CScan(Requests,headStart);
+                        break;
+                    }
                 	case 5:
                 		break;
-                	case 6:
-                		break;
+                	case 6: {
+                	    CLook.CLook(Requests,headStart);
+                        break;
+                    }
                 	case 7:
                 		break;
                 }
