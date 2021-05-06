@@ -60,6 +60,8 @@ public class Main {
                         break;
                     }
                 	case 5:
+                		Look l = new Look(Requests,headStart);
+                		l.schedule();
                 		break;
                 	case 6: {
                 	    CLook.CLook(Requests,headStart);
