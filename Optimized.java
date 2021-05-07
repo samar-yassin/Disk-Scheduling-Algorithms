@@ -3,7 +3,7 @@ import java.util.Collections;
 
 public class Optimized {
 
-    public static void Optimized(ArrayList<Integer> Requests, int head) {
+    public static int calculateTotalSeekTime(ArrayList<Integer> Requests, int head) {
         Collections.sort(Requests);
         head=0;
         int totalHeadMovement=0;
@@ -22,9 +22,6 @@ public class Optimized {
             head =seekTrack;
         }
 
-        System.out.println("\nthe total head movement : "+totalHeadMovement);
-
-
+        return totalHeadMovement;
     }
-
 }

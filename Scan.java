@@ -2,13 +2,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Scan {
-	ArrayList<Integer> requests = new ArrayList<Integer>();
-	int head, index, totalMovement;
+	static ArrayList<Integer> requests = new ArrayList<Integer>();
+	static int head, index, totalMovement;
 	
-	public Scan(ArrayList<Integer> requests, int headStart) {
-		this.totalMovement = 0;
-		this.head = headStart;
-		this.requests = requests;
+	
+	public static int calculateTotalSeekTime(ArrayList<Integer> _requests, int headStart) {
+		totalMovement = 0;
+		head = headStart;
+		requests = _requests;
 		Collections.sort(requests);
 		for (int i = requests.size() - 1; i >= 0; i--) {
 			if (requests.get(i) <= head) {
@@ -16,9 +17,10 @@ public class Scan {
 				break;
 			}
 		}
+		return schedule();
 	}
 	
-	public void schedule() {
+	public static int schedule() {
 		int increment = -1;
 		totalMovement = head + requests.get(requests.size()-1);
 		System.out.println("Sequence:");
@@ -32,8 +34,6 @@ public class Scan {
 			}
 			index += increment;
 		}
-		System.out.println();
-		System.out.println("Total Head Movements: " + totalMovement);
-		System.out.println();
+		return totalMovement;
 	}
 }
