@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CLook {
+	static ArrayList<Integer> sequence = new ArrayList<Integer>();
 
 	public static int calculateTotalSeekTime(ArrayList<Integer> Requests, int headstart,int direction){
+		sequence.clear();
 		System.out.println("CLOOK ALGORITHM");
 		System.out.println("the sequence of head movement :");
 		int seekTrack;
@@ -14,6 +16,8 @@ public class CLook {
 		if(direction==1) {
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
+				sequence.add(seekTrack);
+
 				if (seekTrack >= headstart) {
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
@@ -23,6 +27,8 @@ public class CLook {
 
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
+				sequence.add(seekTrack);
+
 				if (seekTrack < headstart) {
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
@@ -33,6 +39,7 @@ public class CLook {
 		else if(direction==2){
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
+				sequence.add(seekTrack);
 				if (seekTrack <= headstart) {
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
@@ -42,6 +49,7 @@ public class CLook {
 
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
+				sequence.add(seekTrack);
 				if (seekTrack > headstart) {
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
@@ -51,5 +59,8 @@ public class CLook {
 
 		}
 		return totalHeadMovement;
+	}
+	public static ArrayList<Integer> getSequence() {
+		return sequence;
 	}
 }

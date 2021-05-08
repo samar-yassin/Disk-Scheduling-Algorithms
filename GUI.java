@@ -196,7 +196,7 @@ public class GUI extends JFrame {
 						sequence = Scan.getSequence();
 						break;
 					case 3: 
-						seekTimeNum.setText("" + CScan.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + CScan.calculateTotalSeekTime(requests, head,direction));
 						sequence = Scan.getSequence();
 						break;
 					case 4:
@@ -204,7 +204,7 @@ public class GUI extends JFrame {
 						sequence = Look.getSequence();
 						break;
 					case 5: 
-						seekTimeNum.setText("" + CLook.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + CLook.calculateTotalSeekTime(requests, head,direction));
 						sequence = CLook.getSequence();
 						break;
 					case 6: 
