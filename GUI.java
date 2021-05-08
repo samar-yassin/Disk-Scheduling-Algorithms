@@ -46,13 +46,14 @@ public class GUI extends JFrame {
 	private JRadioButton rdbtnLeft;
 	private JRadioButton rdbtnRight;
 	private JPanel SequencePanel;
+	private ButtonGroup group;
 	private boolean headPresent;
 	ArrayList<Integer> requests = new ArrayList<Integer>();
 	ArrayList<Integer> sortedRequests = new ArrayList<Integer>();
 	ArrayList<Integer> xAxis = new ArrayList<Integer>();
 	ArrayList<Integer> sequence = new ArrayList<Integer>();
 	ArrayList<Integer> sequenceIndex = new ArrayList<Integer>();
-	int scheduler, head = -1, headIndex;
+	int scheduler, head = -1, headIndex, direction;
 	private JTextField headField;
 
    public void draw(Graphics2D g2) {
@@ -182,6 +183,12 @@ public class GUI extends JFrame {
 				Collections.sort(sortedRequests);
 
 				scheduler = comboBox.getSelectedIndex();
+				if (rdbtnRight.isSelected()) {
+					direction = 1;
+				}
+				if (rdbtnLeft.isSelected()) {
+					direction = 2;
+				}
 				
 				switch(scheduler) {
 					case 0:
@@ -192,11 +199,11 @@ public class GUI extends JFrame {
 						seekTimeNum.setText("" + SSTF.calculateTotalSeekTime(requests, head));
 						break;
 					case 2: 
-						seekTimeNum.setText("" + Scan.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + Scan.calculateTotalSeekTime(requests, head, direction));
 						sequence = Scan.getSequence();
 						break;
 					case 3: {
-						seekTimeNum.setText("" + CScan.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + CScan.calculateTotalSeekTime(requests, head, direction));
 						sequence = CScan.getSequence();
 						int index = sequence.indexOf(199);
 						sequence.remove(index);
@@ -206,11 +213,11 @@ public class GUI extends JFrame {
 						break;
 					}
 					case 4:
-						seekTimeNum.setText("" + Look.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + Look.calculateTotalSeekTime(requests, head, direction));
 						sequence = Look.getSequence();
 						break;
 					case 5: 
-						seekTimeNum.setText("" + CLook.calculateTotalSeekTime(requests, head));
+						seekTimeNum.setText("" + CLook.calculateTotalSeekTime(requests, head, direction));
 						sequence = CLook.getSequence();
 						break;
 					case 6: 
@@ -276,7 +283,7 @@ public class GUI extends JFrame {
 	            if (j == sortedRequests.size() && j != 0 && i != xAxis.get(xAxis.size()-1)) {
 	            	xAxis.add(r.x + i);
 	            	g.drawLine(r.x + i, 0, r.x + i, 3);
-	            	g.drawString("" + (100), r.x + i - 5, 16);
+	            	g.drawString("" + (200), r.x + i - 5, 16);
 	            	break;
 	            }
 	          }
@@ -289,7 +296,6 @@ public class GUI extends JFrame {
 	    columnHeader.setBackground(Color.white);
 	    columnHeader.setOpaque(true);
 		scrollPane = new JScrollPane();
-		//scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	    scrollPane.setColumnHeaderView(columnHeader);
 	    scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, corners[0]);
 	    scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, corners[1]);
@@ -350,7 +356,7 @@ public class GUI extends JFrame {
 		rdbtnRight.setBounds(452, 380, 59, 23);
 		contentPane.add(rdbtnRight);
 		
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		group.add(rdbtnLeft);
 		group.add(rdbtnRight);
 		

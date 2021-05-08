@@ -2,24 +2,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SSTF {
-	public static int calculateTotalSeekTime(ArrayList<Integer> arr, int head){
-		int currentTrack, finished = 0, diff = 1000, j = 0, totalSeekTime = 0, len = arr.size();
-		boolean[] done = new boolean[len];
+	public static int calculateTotalSeekTime(ArrayList<Integer> requests, int head){
+		/* 
+		 * 1- while finished isn't equal the size of the queue, there's still a request to be processed
+		 * 2- each time we get the request with the minimum seek time difference from the head and process it
+		 * 3- repeat -2- until all the requests been processed 
+		 * */
+		int currentTrack, finished = 0, diff = 1000, j = 0, totalSeekTime = 0, size = requests.size();
+		boolean[] done = new boolean[size];
 		Arrays.fill(done, Boolean.FALSE);
-		while (finished != len){
-			for (int i = 0; i < len; i++){
-				currentTrack = arr.get(i);
+		System.out.print("The sequence of head movement: ");
+		while (finished != size){
+			for (int i = 0; i < size; i++){
+				currentTrack = requests.get(i);
+				// get the request with the minimum seek time difference from the current track (head)
 				if (Math.abs(currentTrack - head) < diff && !done[i]){
 					diff = Math.abs(currentTrack - head);
 					j = i;
 				}
 			}
-			totalSeekTime += Math.abs(head - arr.get(j));
+			System.out.print(requests.get(j) + " ");
+			totalSeekTime += Math.abs(head - requests.get(j));
 			done[j] = true;
-			head = arr.get(j);
+			head = requests.get(j);
 			finished++;
 			diff = 1000;
 		}
+		System.out.println();
 		return totalSeekTime;
 	}
 }

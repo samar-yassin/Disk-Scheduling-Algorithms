@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main (String[] arg) {
-		int numberOfRequests, headStart;
+		int numberOfRequests, headStart, direction = 0;
 
 
 		Scanner input = new Scanner(System.in);
@@ -26,6 +26,23 @@ public class Main {
 
 
 			if (option < 8 && option > 0) {
+
+				if(option>2 && option<7){
+					System.out.println("Choose the direction of the head :" +
+							"\n[1] towards 200" +
+							"\n[2] towards 0" +
+							"\nyour input: ");
+
+					direction = input.nextInt();
+					if(direction!=2 && direction!=1){
+						System.out.println("\n===========================");
+						System.out.println("Something went wrong.");
+						System.out.println("===========================\n");
+						continue;
+					}
+
+				}
+
 
 				System.out.print("Enter the initial head start: ");
 				headStart = input.nextInt();
@@ -54,17 +71,17 @@ public class Main {
 					System.out.println("Total seek time: " + SSTF.calculateTotalSeekTime(Requests, headStart));
 					break;
 				case 3: 
-					System.out.println("Total seek time: " + Scan.calculateTotalSeekTime(Requests, headStart));
+					System.out.println("Total seek time: " + Scan.calculateTotalSeekTime(Requests, headStart, direction));
 					break;
 				case 4: {
-					System.out.println("Total seek time: " + CScan.calculateTotalSeekTime(Requests, headStart));
+					System.out.println("Total seek time: " + CScan.calculateTotalSeekTime(Requests, headStart, direction));
 					break;
 				}
 				case 5:
-					System.out.println("Total seek time: " + Look.calculateTotalSeekTime(Requests, headStart));
+					System.out.println("Total seek time: " + Look.calculateTotalSeekTime(Requests, headStart, direction));
 					break;
 				case 6: {
-					System.out.println("Total seek time: " + CLook.calculateTotalSeekTime(Requests, headStart));
+					System.out.println("Total seek time: " + CLook.calculateTotalSeekTime(Requests, headStart, direction));
 					break;
 				}
 				case 7: {
