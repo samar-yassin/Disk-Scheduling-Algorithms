@@ -16,27 +16,27 @@ public class CScan {
 		int totalHeadMovement=0;
 		int head=headstart;
 		Requests.add(0);
-		Requests.add(200);
+		Requests.add(199);
 		Collections.sort(Requests);
 
 		if(direction==1) {
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 
 				if (seekTrack >= headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
 				}
 			}
 			head = 0;
-			totalHeadMovement += 200;
+			totalHeadMovement += 199;
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 
 				if (seekTrack < headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
@@ -46,20 +46,20 @@ public class CScan {
 		else if(direction==2) {
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 
 				if (seekTrack <= headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
 				}
 			}
-			head = 200;
-			totalHeadMovement += 200;
+			head = 199;
+			totalHeadMovement += 199;
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 				if (seekTrack > headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;

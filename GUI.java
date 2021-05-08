@@ -53,43 +53,84 @@ public class GUI extends JFrame {
 	ArrayList<Integer> xAxis = new ArrayList<Integer>();
 	ArrayList<Integer> sequence = new ArrayList<Integer>();
 	ArrayList<Integer> sequenceIndex = new ArrayList<Integer>();
-	int scheduler, head = -1, headIndex, direction;
+	int scheduler, head = -1, headIndex, direction = -1;
 	private JTextField headField;
+	private Ellipse2D.Double circle;
 
    public void draw(Graphics2D g2) {
     	  setBackground(Color.WHITE);
     	  setForeground(Color.BLACK);
     	  g2.setColor(Color.BLUE);
     	  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-    	  Ellipse2D.Double circle;
-    	  
-    	  int yAxis = 20;
+    	  int yAxis = 20, lastVal = 0;
+    	  if (direction == 1) { //right
+    		  lastVal = sortedRequests.size() - 1;
+    	  } else if (direction == 2) { //left
+    		  lastVal = 0;
+    	  }
     	  if (xAxis.size() > 0) {
     		  for (int i = 0; i < sequenceIndex.size(); i++) {
     			  circle = new Ellipse2D.Double(xAxis.get(sequenceIndex.get(i)+1),yAxis,8,8);
        			  g2.draw(circle);
     			  g2.fill(circle);
-    			  if (scheduler == 2  && sortedRequests.get(0) == sequence.get(i)) {
-          			  if (i != sequenceIndex.size() - 1) {
-        				  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(0), yAxis+22);
-        			  }
-        			  yAxis+=20;
-    				  circle = new Ellipse2D.Double(xAxis.get(0),yAxis,8,8);
-           			  g2.draw(circle);
-        			  g2.fill(circle);
-        			  if (i != sequenceIndex.size() - 1) {
-        				  g2.drawLine(xAxis.get(0), yAxis+2, xAxis.get(sequenceIndex.get(i+1)+1), yAxis+22);
-        			  }
-        			  yAxis+=20;
-    			  } else {
+
+ 				  if (direction == 2 && sortedRequests.get(0) == sequence.get(i)) {
+					  if (scheduler == 2) {
+						  drawExtraNode(g2, i, yAxis, 0, sequenceIndex.get(i+1)+1);
+						  yAxis+=40;
+					  } else if (scheduler == 3) {
+						  drawExtraNode(g2, i, yAxis, 0, xAxis.size()-1);
+						  yAxis+=20;
+						  drawExtraNode(g2, i, yAxis, xAxis.size()-1, sequenceIndex.get(i+1)+1);
+						  yAxis+=40;
+					  } else {
+	        			  if (i != sequenceIndex.size() - 1) {
+	        				  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(sequenceIndex.get(i+1)+1), yAxis+22);
+	        			  }
+	        			  yAxis+=20;
+					  }
+				  } else if (direction == 1 && sortedRequests.get(sortedRequests.size() - 1) - 80 == sequence.get(i) - 80){
+					  if (scheduler == 2) {
+						  drawExtraNode(g2, i, yAxis, xAxis.size()-1, sequenceIndex.get(i+1)+1);
+						  yAxis+=40;
+					  } else if (scheduler == 3) {
+						  drawExtraNode(g2, i, yAxis, xAxis.size()-1, 0);
+						  yAxis+=20;
+						  drawExtraNode(g2, i, yAxis, 0, sequenceIndex.get(i+1)+1);
+						  yAxis+=40;
+					  } else {
+	        			  if (i != sequenceIndex.size() - 1) {
+	        				  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(sequenceIndex.get(i+1)+1), yAxis+22);
+	        			  }
+	        			  yAxis+=20;
+					  }
+				  } else {
         			  if (i != sequenceIndex.size() - 1) {
         				  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(sequenceIndex.get(i+1)+1), yAxis+22);
         			  }
         			  yAxis+=20;
-    			  }
+				  }
     		  }
     	  }
    }	
+   
+   public void drawExtraNode(Graphics2D g2, int i, int yAxis, int location, int nextLocation) {
+	      if (location != xAxis.size() - 1 && direction == 2) {
+	    	  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(location), yAxis+22);
+	      }
+	      if (location != 0  && direction == 1) {
+	    	  g2.drawLine(xAxis.get(sequenceIndex.get(i)+1), yAxis+2, xAxis.get(location), yAxis+22);
+	      }
+		  yAxis+=20;
+		  circle = new Ellipse2D.Double(xAxis.get(location),yAxis,8,8);
+		  g2.draw(circle);
+		  g2.fill(circle);
+		  if (i != sequenceIndex.size() - 1) {
+			  g2.drawLine(xAxis.get(location), yAxis+2, xAxis.get(nextLocation), yAxis+22);
+		  }
+		  yAxis+=20;
+   }
+   
     public void drawSequence(Graphics2D g2) {
     	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     	g2.setFont(new Font("TimesRoman", Font.PLAIN, 20));
@@ -104,7 +145,7 @@ public class GUI extends JFrame {
    public void getSequenceIndex() {
 	   for (int i = 0; i < sequence.size(); i++) {
 		   for (int j = 0; j < sortedRequests.size(); j++) {
-			   if (sequence.get(i) == sortedRequests.get(j)) {
+			   if (sequence.get(i) - 80 == sortedRequests.get(j) - 80) {
 				   sequenceIndex.add(j);
 			   }
 		   }
@@ -165,7 +206,8 @@ public class GUI extends JFrame {
 				sequence.clear();
 				sequenceIndex.clear();
 				headPresent = false;
-				
+				direction = -1;
+			
 				head = Integer.parseInt(headField.getText());
 				int req;
 				String [] str = requestsField.getText().split(" ");
@@ -197,6 +239,7 @@ public class GUI extends JFrame {
 						break;
 					case 1:
 						seekTimeNum.setText("" + SSTF.calculateTotalSeekTime(requests, head));
+						sequence = SSTF.getSequence();
 						break;
 					case 2: 
 						seekTimeNum.setText("" + Scan.calculateTotalSeekTime(requests, head, direction));
@@ -209,7 +252,6 @@ public class GUI extends JFrame {
 						sequence.remove(index);
 						index = sequence.indexOf(0);
 						sequence.remove(index);
-						//System.out.println("sequence: " + sequence);
 						break;
 					}
 					case 4:
@@ -222,9 +264,11 @@ public class GUI extends JFrame {
 						break;
 					case 6: 
 						seekTimeNum.setText("" + Optimized.calculateTotalSeekTime(requests, head));
+						sequence = Optimized.getSequence();
 						break;
 				}
 				getSequenceIndex();
+				group.clearSelection();
 				contentPane.repaint();
 			}
 		});
@@ -283,7 +327,7 @@ public class GUI extends JFrame {
 	            if (j == sortedRequests.size() && j != 0 && i != xAxis.get(xAxis.size()-1)) {
 	            	xAxis.add(r.x + i);
 	            	g.drawLine(r.x + i, 0, r.x + i, 3);
-	            	g.drawString("" + (200), r.x + i - 5, 16);
+	            	g.drawString("" + (199), r.x + i - 5, 16);
 	            	break;
 	            }
 	          }

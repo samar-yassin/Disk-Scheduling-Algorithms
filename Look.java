@@ -19,7 +19,7 @@ public class Look {
 					break;
 				}
 			}
-		} else {
+		} else if (direction == 2) {
 			for (int i = requests.size() - 1; i >= 0; i--) {
 				if (requests.get(i) <= head) {
 					index = i;
@@ -51,7 +51,7 @@ public class Look {
 					i = index;
 					increment = -1;
 				}
-			} else {
+			} else if (direction == 2) {
 				if (i == 0) {
 					i = index;
 					increment = 1;

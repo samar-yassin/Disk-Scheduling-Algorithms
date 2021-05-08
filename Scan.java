@@ -12,14 +12,14 @@ public class Scan {
 		requests = _requests;
 		direction = _direction;
 		Collections.sort(requests);
-		if (direction == 1) {
+		if (direction == 1) { //right
 			for (int i = 0; i < requests.size(); i++) {
 				if (requests.get(i) >= head) {
 					index = i;
 					break;
 				}
 			}
-		} else {
+		}  else if (direction == 2) { //left
 			for (int i = requests.size() - 1; i >= 0; i--) {
 				if (requests.get(i) <= head) {
 					index = i;
@@ -35,7 +35,7 @@ public class Scan {
 		if (direction == 1) {
 			increment = 1;
 			end = -1;
-			totalMovement = (200 - head) + (200 - requests.get(0));
+			totalMovement = (199 - head) + (199 - requests.get(0));
 		} else {
 			increment = -1;
 			end = requests.size();
@@ -51,7 +51,7 @@ public class Scan {
 					i = index;
 					increment = -1;
 				}
-			} else {
+			}  else if (direction == 2) {
 				if (i == 0) {
 					i = index;
 					increment = 1;

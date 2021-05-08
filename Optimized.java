@@ -2,8 +2,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Optimized {
-
+	
+	static ArrayList<Integer> sequence = new ArrayList<Integer>();
+	
     public static int calculateTotalSeekTime(ArrayList<Integer> Requests, int head) {
+    	sequence.clear();
         Collections.sort(Requests);
         head=0;
         int totalHeadMovement=0;
@@ -14,7 +17,8 @@ public class Optimized {
 
         for(int i=0 ;i <Requests.size() ; i++){
             seekTrack= Requests.get(i);
-
+            
+            sequence.add(seekTrack);
             System.out.print(seekTrack+" ");
 
             totalHeadMovement += Math.abs(seekTrack - head);
@@ -24,4 +28,8 @@ public class Optimized {
 
         return totalHeadMovement;
     }
+    
+	public static ArrayList<Integer> getSequence() {
+		return sequence;
+	}
 }

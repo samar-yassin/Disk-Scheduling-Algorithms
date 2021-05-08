@@ -16,9 +16,9 @@ public class CLook {
 		if(direction==1) {
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 
 				if (seekTrack >= headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
@@ -27,9 +27,9 @@ public class CLook {
 
 			for (int i = 0; i < Requests.size(); i++) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
 
 				if (seekTrack < headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
@@ -39,8 +39,9 @@ public class CLook {
 		else if(direction==2){
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
+
 				if (seekTrack <= headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
@@ -49,8 +50,9 @@ public class CLook {
 
 			for (int i = Requests.size()-1; i>=0; i--) {
 				seekTrack = Requests.get(i);
-				sequence.add(seekTrack);
+
 				if (seekTrack > headstart) {
+					sequence.add(seekTrack);
 					System.out.print(seekTrack + " ");
 					totalHeadMovement += Math.abs(seekTrack - head);
 					head = seekTrack;
