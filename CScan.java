@@ -3,10 +3,12 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class CScan {
-
+	
+	static ArrayList<Integer> sequence = new ArrayList<Integer>();
+	
 	public static int calculateTotalSeekTime(ArrayList<Integer> Requests, int head){
 
-
+		sequence.clear();
 		ArrayList<Integer>left = new ArrayList<Integer>() ,  right=new ArrayList<Integer>();
 		int seekTrack;
 
@@ -31,8 +33,8 @@ public class CScan {
 
 		for(int i=0 ;i <right.size() ; i++){
 			seekTrack= right.get(i);
-
-			System.out.print(seekTrack);
+			sequence.add(seekTrack);
+			System.out.print(seekTrack + " ");
 
 			totalHeadMovement += Math.abs(seekTrack - head);
 
@@ -44,8 +46,8 @@ public class CScan {
 
 		for(int i=0 ;i <left.size() ; i++){
 			seekTrack= left.get(i);
-
-			System.out.print(seekTrack);
+			sequence.add(seekTrack);
+			System.out.print(seekTrack + " ");
 
 			totalHeadMovement += Math.abs(seekTrack - head);
 
@@ -53,5 +55,9 @@ public class CScan {
 		}
 
 		return totalHeadMovement;
+	}
+	
+	public static ArrayList<Integer> getSequence() {
+		return sequence;
 	}
 }
