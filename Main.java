@@ -1,108 +1,191 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+/*
+CreateFile root/file1.txt 10
+CreateFile root/folder8/f.txt 20
 
+CreateFolder root/folder8
+
+DeleteFile root/file1.txt
+
+DeleteFolder root/folder1
+
+DisplayDiskStatus
+
+DisplayDiskStructure
+ */
 public class Main {
 
-	public static void main (String[] arg) {
-		int numberOfRequests, headStart, direction = 0;
+    static File diskStructure = new File("DiskStructure.vfs");
 
 
-		Scanner input = new Scanner(System.in);
+    private static Protection protection = new Protection();
+    private static VFS vfs;
 
-		while(true) {
-			ArrayList<Integer> Requests = new ArrayList<Integer>();
-
-			System.out.println("Select the Scheduler you want to use:"
-					+ "\n[1] First Come First Served"
-					+ "\n[2] Shortest-Seek-Time-First"
-					+ "\n[3] SCAN"
-					+ "\n[4] C-SCAN"
-					+ "\n[5] LOOK"
-					+ "\n[6] C-LOOK"
-					+ "\n[7] PROPOSED NEW OPTIMIZED REAL-TIME DISK SCHEDULING"
-					+ "\n[8] Exit");
-			System.out.print("Your input: ");
-			int option = input.nextInt();
+    static {
+        try {
+            vfs = new VFS();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
-			if (option < 8 && option > 0) {
+    static boolean checkLengthParams(String command , int length) {
+        if (command.equals("DisplayDiskStatus") || command.equals("DisplayDiskStructure") || command.equals("help") || command.equals("exit") || command.equals("TellUser")) {
+            if (length > 1) {
+                System.out.println("hi");
+                return false;
+            }
+        }
+        else if(command.equals("CreateFile") || command.equals("Login") || command.equals("CUser")) {
+            if (length != 3) return false;
+        }
+        else if(command.equals("Grant")) {
+            if (length != 4) return false;
+        }
+        else {
+            if(length!=2) return false;
+        }
+        return true;
+    }
 
-				if(option>2 && option<7){
-					System.out.println("Choose the direction of the head :" +
-							"\n[1] towards 200" +
-							"\n[2] towards 0" +
-							"\nyour input: ");
+    public static void main(String[] args) throws IOException {
+        vfs.loadFromFile();
 
-					direction = input.nextInt();
-					if(direction!=2 && direction!=1){
-						System.out.println("\n===========================");
-						System.out.println("Something went wrong.");
-						System.out.println("===========================\n");
-						continue;
-					}
+        Scanner sc= new Scanner(System.in);
+        String command;
+        ArrayList commandList = VFS.getCommandList();
 
-				}
+        System.out.println("Enter \"help\" to get list of commands & \"exit\" to close the program");
 
+        while (true) {
+            System.out.print("$ ");
+            command = sc.nextLine();
+            String[] parameters = command.split(" ");
 
-				System.out.print("Enter the initial head start: ");
-				headStart = input.nextInt();
-				System.out.print("Enter the number of I/O requests: ");
-				numberOfRequests = input.nextInt();
+            command = parameters[0];
+            if (command.equals("")) {
+                continue;
+            }
+            if (commandList.contains(command)) {
 
-				System.out.println();
+                if(!checkLengthParams(command,parameters.length)){
+                    System.out.println("too few or many args");
+                    continue;
+                }
+                if (command.equals("Login")) {
+                    String role = protection.accountExists(parameters[1], parameters[2]);
+                    if (role != null) {
+                        protection.login(parameters[1], parameters[2], role);
+                    } else {
+                        System.out.println("Account doesn't exist");
+                        continue;
+                    }
+                }
+                else if (command.equals("help")) {
+                    for (int x = 0; x < VFS.getCommandList().size(); x++) {
+                        System.out.println("\t" + (VFS.getCommandList().get(x)));
+                    }
+                    continue;
+                }
+                else if (command.equals("exit")) {
+                    break;
+                } else {
+                    if (protection.logged) {
+                        if (command.equals("TellUser")) {
+                            if (protection.getCurrentRole().equals("Admin"))
+                                protection.getCurrentAdmin().displayUser();
+                            else
+                                protection.getCurrentUser().displayUser();
 
+                        } else if (command.equals("CUser")) {
+                            if (protection.getCurrentRole().equals("Admin")) {
+                                User newUser = protection.getCurrentAdmin().createUser(parameters[1], parameters[2]);
+                                if (!protection.addClient(newUser))
+                                    System.out.println("Username is taken");
+                            } else {
+                                System.out.println("Not admin");
+                            }
+                        } else if (command.equals("Grant")) {
+                            if (protection.getCurrentRole().equals("Admin")) {
+                                User user = protection.getUser(parameters[1]);
+                                if (user == null) {
+                                    System.out.println("This user doesn't exist");
+                                    continue;
+                                }
+                                Directory dir = null;
+                                for (int i = 0; i < vfs.directories.size(); i++) {
+                                    if (vfs.directories.get(i).getDirectoryPath().equalsIgnoreCase(parameters[2])) {
+                                        dir = vfs.directories.get(i);
+                                    }
+                                }
+                                if (dir == null) {
+                                    System.out.println("Directory doesn't exist");
+                                    continue;
+                                }
+                                protection.getCurrentAdmin().grantAcess(user, dir, parameters[3]);
+                            } else {
+                                System.out.println("You don't have premission to use this command");
+                            }
+                        } else if (command.equals("DisplayDiskStatus")) {
+                            vfs.displayDiskStatus();
 
-				// Read Requests
-				for (int i = 0; i < numberOfRequests; ++i) {
-					input = new Scanner(System.in);
-					System.out.print("Request " + (i + 1) + " : ");
+                        } else if (command.equals("DisplayDiskStructure")) {
+                            vfs.displayDiskStructure(0);
 
-					Requests.add(input.nextInt());
-				}
-				System.out.println("===========================\n");
+                        }  else {
+                            String path = parameters[1];
+                            if (command.equals("CreateFile")) {
+                            	if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canCreate(path)) {
+	                                System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
+	                                        "2-\tIndexed Allocation\n" +
+	                                        "3-\tLinked Allocation\n");
+	                                System.out.print("Algorithm number: ");
+	                                int algoNo = Integer.parseInt(sc.nextLine());
+	                                if(algoNo != 1 && algoNo !=2 && algoNo !=3){
+	                                    System.out.println("-Something went wrong");
+	                                    continue;
+	                                }
+	                                int size =Integer.parseInt(parameters[2]);
+	                                vfs.createFile(parameters[1],size,algoNo);
+                            	} else
+                                    System.out.println("You don't have premission to create a file here");
 
-				System.out.println();
+                            } else if (command.equalsIgnoreCase("CreateFolder")) {
+                                if ((protection.getCurrentRole().equals("Admin")) || ((User)protection.getCurrentUser()).canCreate(path))
+                                    vfs.createFolder(path);
+                                else
+                                    System.out.println("You don't have premission to create a folder here");
 
-				switch(option) {
-				case 1:
-					System.out.println("Total seek time: " + FCFS.calculateTotalSeekTime(Requests, headStart));
-					break;
-				case 2:
-					System.out.println("Total seek time: " + SSTF.calculateTotalSeekTime(Requests, headStart));
-					break;
-				case 3: 
-					System.out.println("Total seek time: " + Scan.calculateTotalSeekTime(Requests, headStart, direction));
-					break;
-				case 4: {
-					System.out.println("Total seek time: " + CScan.calculateTotalSeekTime(Requests, headStart, direction));
-					break;
-				}
-				case 5:
-					System.out.println("Total seek time: " + Look.calculateTotalSeekTime(Requests, headStart, direction));
-					break;
-				case 6: {
-					System.out.println("Total seek time: " + CLook.calculateTotalSeekTime(Requests, headStart, direction));
-					break;
-				}
-				case 7: {
-					System.out.println("Total seek time: " + Optimized.calculateTotalSeekTime(Requests, headStart));
-					break;
-				}
-				}
-				System.out.println();
-				System.out.println("===========================\n");
+                            } else if (command.equalsIgnoreCase("DeleteFile")) {
+                            	if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canDelete(path))
+                            		vfs.deleteFile(path);
+                                else
+                                    System.out.println("You don't have premission to delete a file here");
 
-			} else if (option == 8) {
+                            } else if (command.equalsIgnoreCase("DeleteFolder")) {
+                                if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canDelete(path))
+                                    vfs.deleteFolder(path);
+                                else
+                                    System.out.println("You don't have premission to delete a folder here");
+                            }
+                        }
+                    } else {
+                        System.out.println("Please login first");
+                    }
+                }
 
-				System.exit(0);
+            } else System.out.println("\"" + command + "\"" + " Command not found.");
+        }
+        protection.saveData();
+        vfs.saveToFile();
 
-			} else {
-				System.out.println("\n===========================");
-				System.out.println("Invalid option!");
-				System.out.println("===========================\n");
-				continue;
-
-			}
-		}
-	}
+    }
 }
